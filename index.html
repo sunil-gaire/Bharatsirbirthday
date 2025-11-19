@@ -1,459 +1,206 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Happy Birthday Bharat Sir! 🎉</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: #1a1a2e;
-            color: white;
-            overflow-x: hidden;
-            height: 500vh;
-        }
-
-        #canvas-container {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 0;
-            opacity: 0.8;
-        }
-
-        .content {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100vh;
-            z-index: 1;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            text-align: center;
-            padding: 20px;
-            pointer-events: none;
-        }
-
-        h1 {
-            font-size: 5rem;
-            margin-bottom: 30px;
-            opacity: 0;
-            background: linear-gradient(45deg, #ff6b6b, #ffd93d, #6bcf7f, #4d96ff);
-            background-size: 300% 300%;
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            animation: gradient 3s ease infinite;
-            text-shadow: 0 0 30px rgba(255, 107, 107, 0.5);
-        }
-
-        @keyframes gradient {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
-        }
-
-        .subtitle {
-            font-size: 2rem;
-            opacity: 0;
-            margin-bottom: 15px;
-            color: #ffd93d;
-            text-shadow: 0 0 20px rgba(255, 217, 61, 0.5);
-        }
-
-        .teacher-name {
-            font-size: 3.5rem;
-            font-weight: bold;
-            opacity: 0;
-            color: #ff6b6b;
-            text-shadow: 0 0 30px rgba(255, 107, 107, 0.7);
-            margin: 20px 0;
-        }
-
-        .from {
-            font-size: 1.4rem;
-            opacity: 0;
-            font-style: italic;
-            margin-top: 30px;
-            color: #6bcf7f;
-            text-shadow: 0 0 15px rgba(107, 207, 127, 0.5);
-        }
-
-        .scroll-hint {
-            position: fixed;
-            bottom: 30px;
-            left: 50%;
-            transform: translateX(-50%);
-            opacity: 0;
-            z-index: 2;
-            animation: bounce 2s infinite;
-            font-size: 1.2rem;
-            color: #4d96ff;
-            text-shadow: 0 0 15px rgba(77, 150, 255, 0.7);
-        }
-
-        @keyframes bounce {
-            0%, 100% { transform: translateX(-50%) translateY(0); }
-            50% { transform: translateX(-50%) translateY(-15px); }
-        }
-
-        .message {
-            max-width: 900px;
-            font-size: 1.4rem;
-            line-height: 2;
-            opacity: 0;
-            background: rgba(26, 26, 46, 0.85);
-            padding: 50px;
-            border-radius: 25px;
-            border: 3px solid rgba(255, 217, 61, 0.5);
-            backdrop-filter: blur(15px);
-            box-shadow: 0 0 50px rgba(255, 217, 61, 0.3);
-        }
-
-        .message h2 {
-            color: #ffd93d;
-            text-shadow: 0 0 20px rgba(255, 217, 61, 0.5);
-        }
-
-        .floating {
-            animation: float 3s ease-in-out infinite;
-        }
-
-        @keyframes float {
-            0%, 100% { transform: translateY(0px); }
-            50% { transform: translateY(-25px); }
-        }
-
-        .sparkle {
-            position: fixed;
-            width: 6px;
-            height: 6px;
-            background: #ffd93d;
-            border-radius: 50%;
-            pointer-events: none;
-            z-index: 2;
-            box-shadow: 0 0 10px #ffd93d;
-        }
-
-        .reaction-container {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: space-around;
-            padding: 0 50px;
-            z-index: 5;
-            pointer-events: none;
-        }
-
-        .compound-box {
-            background: rgba(26, 26, 46, 0.9);
-            padding: 40px;
-            border-radius: 20px;
-            border: 3px solid rgba(255, 217, 61, 0.6);
-            text-align: center;
-            min-width: 280px;
-            opacity: 0;
-            transform: translateX(-100px);
-            box-shadow: 0 0 40px rgba(255, 217, 61, 0.4);
-        }
-
-        .compound-box.from-right {
-            transform: translateX(100px);
-        }
-
-        .compound-name {
-            font-size: 1.8rem;
-            font-weight: bold;
-            color: #ff6b6b;
-            margin-bottom: 15px;
-            text-shadow: 0 0 15px rgba(255, 107, 107, 0.5);
-        }
-
-        .compound-formula {
-            font-size: 1.5rem;
-            font-family: 'Courier New', monospace;
-            color: #4d96ff;
-            margin-bottom: 20px;
-        }
-
-        .structure-visual {
-            font-size: 3rem;
-            margin: 20px 0;
-            font-family: monospace;
-            color: #6bcf7f;
-            line-height: 1.2;
-        }
-
-        .reaction-arrow {
-            font-size: 5rem;
-            color: #ffd93d;
-            opacity: 0;
-            transform: scale(0);
-            text-shadow: 0 0 30px rgba(255, 217, 61, 0.7);
-        }
-
-        .reaction-conditions {
-            background: rgba(255, 107, 107, 0.2);
-            padding: 15px 25px;
-            border-radius: 12px;
-            font-size: 1.1rem;
-            margin-top: 15px;
-            border: 2px solid rgba(255, 107, 107, 0.4);
-            color: #ffd93d;
-        }
-
-        .structure-label {
-            font-size: 0.9rem;
-            color: #b8c5ff;
-            margin-top: 10px;
-        }
-
-        @media (max-width: 768px) {
-            h1 { font-size: 3rem; }
-            .teacher-name { font-size: 2.5rem; }
-            .subtitle { font-size: 1.5rem; }
-            .message { font-size: 1.2rem; padding: 30px; }
-            .reaction-container { flex-direction: column; gap: 20px; padding: 20px; }
-            .compound-box { min-width: 200px; padding: 25px; }
-            .structure-visual { font-size: 2rem; }
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Happy Birthday Bharat Sir! 🎉</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+<style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #1a1a2e; color: white; overflow-x: hidden; }
+    #canvas-container { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; opacity: 0.8; }
+    .content { position: relative; height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 20px; z-index: 1; }
+    h1 { font-size: 5rem; margin-bottom: 30px; opacity: 0; background: linear-gradient(45deg, #ff6b6b, #ffd93d, #6bcf7f, #4d96ff); background-size: 300% 300%; -webkit-background-clip: text; -webkit-text-fill-color: transparent; animation: gradient 3s ease infinite; text-shadow: 0 0 30px rgba(255, 107, 107, 0.5); }
+    @keyframes gradient { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
+    .subtitle { font-size: 2rem; opacity: 0; margin-bottom: 15px; color: #ffd93d; text-shadow: 0 0 20px rgba(255, 217, 61, 0.5); }
+    .teacher-name { font-size: 3.5rem; font-weight: bold; opacity: 0; color: #ff6b6b; text-shadow: 0 0 30px rgba(255, 107, 107, 0.7); margin: 20px 0; }
+    .from { font-size: 1.4rem; opacity: 0; font-style: italic; margin-top: 30px; color: #6bcf7f; text-shadow: 0 0 15px rgba(107, 207, 127, 0.5); }
+    .scroll-hint { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); opacity: 0; z-index: 2; animation: bounce 2s infinite; font-size: 1.2rem; color: #4d96ff; text-shadow: 0 0 15px rgba(77, 150, 255, 0.7); }
+    @keyframes bounce { 0%, 100% { transform: translateX(-50%) translateY(0); } 50% { transform: translateX(-50%) translateY(-15px); } }
+    .message { max-width: 900px; font-size: 1.4rem; line-height: 2; opacity: 0; background: rgba(26, 26, 46, 0.85); padding: 50px; border-radius: 25px; border: 3px solid rgba(255, 217, 61, 0.5); backdrop-filter: blur(15px); box-shadow: 0 0 50px rgba(255, 217, 61, 0.3); }
+    .message h2 { color: #ffd93d; text-shadow: 0 0 20px rgba(255, 217, 61, 0.5); }
+    .floating { animation: float 3s ease-in-out infinite; }
+    @keyframes float { 0%, 100% { transform: translateY(0px); } 50% { transform: translateY(-25px); } }
+    .sparkle { position: fixed; width: 6px; height: 6px; background: #ffd93d; border-radius: 50%; pointer-events: none; z-index: 2; box-shadow: 0 0 10px #ffd93d; }
+    .reaction-container { position: relative; display: flex; align-items: center; justify-content: space-around; padding: 50px; height: 100vh; margin-top: 100vh; pointer-events: none; }
+    .compound-box { background: rgba(26,26,46,0.9); padding: 40px; border-radius: 20px; border: 3px solid rgba(255,217,61,0.6); text-align: center; min-width: 280px; opacity: 0; transform: translateX(-100px); box-shadow: 0 0 40px rgba(255,217,61,0.4); }
+    .compound-box.from-right { transform: translateX(100px); }
+    .compound-name { font-size: 1.8rem; font-weight: bold; color: #ff6b6b; margin-bottom: 15px; text-shadow: 0 0 15px rgba(255,107,107,0.5); }
+    .compound-formula { font-size: 1.5rem; font-family: 'Courier New', monospace; color: #4d96ff; margin-bottom: 20px; }
+    .structure-visual { font-size: 3rem; margin: 20px 0; font-family: monospace; color: #6bcf7f; line-height: 1.2; }
+    .reaction-arrow { font-size: 5rem; color: #ffd93d; opacity: 0; transform: scale(0); text-shadow: 0 0 30px rgba(255,217,61,0.7); }
+    .reaction-conditions { background: rgba(255,107,107,0.2); padding: 15px 25px; border-radius: 12px; font-size: 1.1rem; margin-top: 15px; border: 2px solid rgba(255,107,107,0.4); color: #ffd93d; }
+    .structure-label { font-size: 0.9rem; color: #b8c5ff; margin-top: 10px; }
+    @media (max-width: 768px) {
+        h1 { font-size: 3rem; }
+        .teacher-name { font-size: 2.5rem; }
+        .subtitle { font-size: 1.5rem; }
+        .message { font-size: 1.2rem; padding: 30px; }
+        .reaction-container { flex-direction: column; gap: 30px; padding: 20px; }
+        .compound-box { min-width: 200px; padding: 25px; }
+        .structure-visual { font-size: 2rem; }
+    }
+</style>
 </head>
 <body>
-    <div id="canvas-container"></div>
-    
-    <div class="content">
-        <h1 class="floating">🎉 HAPPY BIRTHDAY 🎉</h1>
-        <h2 class="subtitle">To Our Incredible</h2>
-        <h2 class="teacher-name">BHARAT SIR</h2>
-        <p class="subtitle" style="font-size: 1.6rem;">The Chemistry Wizard Who Makes Organic Chemistry Easy!</p>
-        <p class="from">From Your Grateful Students<br><strong>Class 12 - Morning Shift - Section F</strong></p>
-        
-        <div class="message">
-            <h2 style="margin-bottom: 25px;">🎂 A Special Birthday Wish 🎂</h2>
-            <p>Dear Bharat Sir,</p>
-            <p style="margin-top: 25px;">
-                You don't just teach chemistry—you make us fall in love with it! 
-                Your passion, patience, and amazing teaching style have transformed 
-                complex reactions into simple, memorable concepts.
-            </p>
-            <p style="margin-top: 25px;">
-                Every benzene ring, every mechanism, every reaction—they all make sense 
-                because of YOU! Thank you for being the best mentor we could ask for.
-            </p>
-            <p style="margin-top: 30px; font-weight: bold; font-size: 1.6rem; color: #ffd93d;">
-                Wishing you endless happiness and success! 🎊🎈✨
-            </p>
+<div id="canvas-container"></div>
+
+<div class="content">
+    <h1 class="floating">🎉 HAPPY BIRTHDAY 🎉</h1>
+    <h2 class="subtitle">To Our Incredible</h2>
+    <h2 class="teacher-name">BHARAT SIR</h2>
+    <p class="subtitle" style="font-size:1.6rem;">The Chemistry Wizard Who Makes Organic Chemistry Easy!</p>
+    <p class="from">From Your Grateful Students<br><strong>Class 12 - Morning Shift - Section F</strong></p>
+    <div class="message">
+        <h2>🎂 A Special Birthday Wish 🎂</h2>
+        <p>Dear Bharat Sir,</p>
+        <p style="margin-top: 25px;">
+            You don't just teach chemistry—you make us fall in love with it! 
+            Your passion, patience, and amazing teaching style have transformed 
+            complex reactions into simple, memorable concepts.
+        </p>
+        <p style="margin-top: 25px;">
+            Every benzene ring, every mechanism, every reaction—they all make sense 
+            because of YOU! Thank you for being the best mentor we could ask for.
+        </p>
+        <p style="margin-top: 30px; font-weight:bold; font-size:1.6rem; color:#ffd93d;">
+            Wishing you endless happiness and success! 🎊🎈✨
+        </p>
+    </div>
+</div>
+
+<div class="scroll-hint">↓ Scroll Down to See Our Special Reaction for You ↓</div>
+
+<div class="reaction-container">
+    <div class="compound-box" id="bdc-box">
+        <div class="compound-name">Benzene Diazonium Chloride</div>
+        <div class="compound-formula">C₆H₅N₂⁺Cl⁻</div>
+        <div class="structure-visual">
+            <div style="font-size:0.8em;">⬢</div>
+            <div style="margin-top:-10px;">N≡N⁺</div>
+            <div style="font-size:0.7em;margin-top:-5px;">Cl⁻</div>
         </div>
+        <div class="structure-label">BDC (Starting Material)</div>
     </div>
 
-    <div class="scroll-hint">
-        ↓ Scroll Down to See Our Special Reaction for You ↓
+    <div class="reaction-arrow" id="arrow1">+</div>
+
+    <div class="compound-box" id="water-box">
+        <div class="compound-name">Water</div>
+        <div class="compound-formula">H₂O</div>
+        <div class="structure-visual">H-O-H</div>
+        <div class="reaction-conditions">Warm (273-278K)<br>Hydrolysis</div>
     </div>
 
-    <!-- Reaction visualization -->
-    <div class="reaction-container">
-        <div class="compound-box" id="bdc-box">
-            <div class="compound-name">Benzene Diazonium Chloride</div>
-            <div class="compound-formula">C₆H₅N₂⁺Cl⁻</div>
-            <div class="structure-visual">
-                <div style="font-size: 0.8em;">⬢</div>
-                <div style="margin-top: -10px;">N≡N⁺</div>
-                <div style="font-size: 0.7em; margin-top: -5px;">Cl⁻</div>
-            </div>
-            <div class="structure-label">BDC (Starting Material)</div>
+    <div class="reaction-arrow" id="arrow2">→</div>
+
+    <div class="compound-box from-right" id="phenol-box">
+        <div class="compound-name">Phenol</div>
+        <div class="compound-formula">C₆H₅OH</div>
+        <div class="structure-visual">
+            <div style="font-size:0.8em;">⬢</div>
+            <div style="margin-top:-10px;">OH</div>
         </div>
-
-        <div class="reaction-arrow" id="arrow1">+</div>
-
-        <div class="compound-box" id="water-box">
-            <div class="compound-name">Water</div>
-            <div class="compound-formula">H₂O</div>
-            <div class="structure-visual">H-O-H</div>
-            <div class="reaction-conditions">Warm (273-278K)<br>Hydrolysis</div>
-        </div>
-
-        <div class="reaction-arrow" id="arrow2">→</div>
-
-        <div class="compound-box from-right" id="phenol-box">
-            <div class="compound-name">Phenol</div>
-            <div class="compound-formula">C₆H₅OH</div>
-            <div class="structure-visual">
-                <div style="font-size: 0.8em;">⬢</div>
-                <div style="margin-top: -10px;">OH</div>
-            </div>
-            <div class="structure-label">Product + N₂↑ + HCl</div>
-        </div>
+        <div class="structure-label">Product + N₂↑ + HCl</div>
     </div>
+</div>
 
-    <script>
-        gsap.registerPlugin(ScrollTrigger);
+<script>
+gsap.registerPlugin(ScrollTrigger);
 
-        // Three.js Setup - More visible background
-        const scene = new THREE.Scene();
-        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-        const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
-        renderer.setSize(window.innerWidth, window.innerHeight);
-        document.getElementById('canvas-container').appendChild(renderer.domElement);
+// Three.js Background
+const scene = new THREE.Scene();
+const camera = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeight, 0.1, 1000);
+const renderer = new THREE.WebGLRenderer({ alpha:true, antialias:true });
+renderer.setSize(window.innerWidth, window.innerHeight);
+document.getElementById('canvas-container').appendChild(renderer.domElement);
+camera.position.z = 25;
 
-        camera.position.z = 25;
+const molecules = [];
+const geometries = [new THREE.SphereGeometry(0.5,16,16), new THREE.TetrahedronGeometry(0.5), new THREE.OctahedronGeometry(0.5)];
+const materials = [
+    new THREE.MeshBasicMaterial({color:0xff6b6b, transparent:true, opacity:0.9}),
+    new THREE.MeshBasicMaterial({color:0x4d96ff, transparent:true, opacity:0.9}),
+    new THREE.MeshBasicMaterial({color:0xffd93d, transparent:true, opacity:0.9}),
+    new THREE.MeshBasicMaterial({color:0x6bcf7f, transparent:true, opacity:0.9}),
+    new THREE.MeshBasicMaterial({color:0xff6bff, transparent:true, opacity:0.9})
+];
 
-        // Create vibrant molecular structures
-        const molecules = [];
-        const geometries = [
-            new THREE.SphereGeometry(0.5, 16, 16),
-            new THREE.TetrahedronGeometry(0.5),
-            new THREE.OctahedronGeometry(0.5)
-        ];
+for(let i=0;i<60;i++){
+    const geometry = geometries[i%geometries.length];
+    const material = materials[i%materials.length];
+    const molecule = new THREE.Mesh(geometry, material);
+    molecule.position.set(Math.random()*60-30, Math.random()*60-30, Math.random()*40-20);
+    scene.add(molecule);
+    molecules.push({
+        mesh: molecule,
+        velocity:{x:(Math.random()-0.5)*0.03, y:(Math.random()-0.5)*0.03, z:(Math.random()-0.5)*0.02},
+        rotationSpeed:{x:(Math.random()-0.5)*0.02, y:(Math.random()-0.5)*0.02, z:(Math.random()-0.5)*0.02}
+    });
+}
 
-        const materials = [
-            new THREE.MeshBasicMaterial({ color: 0xff6b6b, transparent: true, opacity: 0.9 }),
-            new THREE.MeshBasicMaterial({ color: 0x4d96ff, transparent: true, opacity: 0.9 }),
-            new THREE.MeshBasicMaterial({ color: 0xffd93d, transparent: true, opacity: 0.9 }),
-            new THREE.MeshBasicMaterial({ color: 0x6bcf7f, transparent: true, opacity: 0.9 }),
-            new THREE.MeshBasicMaterial({ color: 0xff6bff, transparent: true, opacity: 0.9 })
-        ];
+function animate(){
+    requestAnimationFrame(animate);
+    molecules.forEach(mol=>{
+        mol.mesh.position.x += mol.velocity.x;
+        mol.mesh.position.y += mol.velocity.y;
+        mol.mesh.position.z += mol.velocity.z;
+        if(Math.abs(mol.mesh.position.x)>30) mol.velocity.x*=-1;
+        if(Math.abs(mol.mesh.position.y)>30) mol.velocity.y*=-1;
+        if(Math.abs(mol.mesh.position.z)>20) mol.velocity.z*=-1;
+        mol.mesh.rotation.x += mol.rotationSpeed.x;
+        mol.mesh.rotation.y += mol.rotationSpeed.y;
+        mol.mesh.rotation.z += mol.rotationSpeed.z;
+    });
+    renderer.render(scene,camera);
+}
+animate();
 
-        // Create more visible molecules
-        for (let i = 0; i < 60; i++) {
-            const geometry = geometries[i % geometries.length];
-            const material = materials[i % materials.length];
-            const molecule = new THREE.Mesh(geometry, material);
-            
-            molecule.position.set(
-                Math.random() * 60 - 30,
-                Math.random() * 60 - 30,
-                Math.random() * 40 - 20
-            );
-            
-            scene.add(molecule);
-            molecules.push({
-                mesh: molecule,
-                velocity: {
-                    x: (Math.random() - 0.5) * 0.03,
-                    y: (Math.random() - 0.5) * 0.03,
-                    z: (Math.random() - 0.5) * 0.02
-                },
-                rotationSpeed: {
-                    x: (Math.random() - 0.5) * 0.02,
-                    y: (Math.random() - 0.5) * 0.02,
-                    z: (Math.random() - 0.5) * 0.02
-                }
-            });
-        }
+// Hero animations
+gsap.to('h1',{opacity:1, scale:1,duration:1.5, ease:'elastic.out(1,0.5)', delay:0.3});
+gsap.to('.subtitle',{opacity:1, y:0,duration:1, delay:0.8, stagger:0.2});
+gsap.to('.teacher-name',{opacity:1, scale:1,duration:1.2, delay:1.2, ease:'back.out(1.7)'});
+gsap.to('.from',{opacity:1,duration:1, delay:1.6});
+gsap.to('.message',{opacity:1, scale:1,duration:1.5, delay:2});
+gsap.to('.scroll-hint',{opacity:1,duration:1, delay:2.5});
 
-        // Animation loop
-        function animate() {
-            requestAnimationFrame(animate);
+// Reaction timeline
+const reactionTimeline = gsap.timeline({
+    scrollTrigger:{
+        trigger:'.reaction-container',
+        start:'top 80%',
+        end:'bottom 20%',
+        scrub:1
+    }
+});
 
-            molecules.forEach(mol => {
-                mol.mesh.position.x += mol.velocity.x;
-                mol.mesh.position.y += mol.velocity.y;
-                mol.mesh.position.z += mol.velocity.z;
+reactionTimeline
+.to('#bdc-box',{opacity:1, x:0, duration:1})
+.to('#arrow1',{opacity:1, scale:1, duration:0.5, ease:'back.out(2)'}, '+=0.3')
+.to('#water-box',{opacity:1, x:0, duration:1}, '+=0.3')
+.to('#arrow2',{opacity:1, scale:1, duration:0.5, ease:'back.out(2)'}, '+=0.3')
+.to('#phenol-box',{opacity:1, x:0, duration:1}, '+=0.3');
 
-                if (Math.abs(mol.mesh.position.x) > 30) mol.velocity.x *= -1;
-                if (Math.abs(mol.mesh.position.y) > 30) mol.velocity.y *= -1;
-                if (Math.abs(mol.mesh.position.z) > 20) mol.velocity.z *= -1;
+// Sparkle effect
+document.addEventListener('mousemove',(e)=>{
+    if(Math.random()>0.8){
+        const sparkle=document.createElement('div');
+        sparkle.className='sparkle';
+        sparkle.style.left=e.clientX+'px';
+        sparkle.style.top=e.clientY+'px';
+        document.body.appendChild(sparkle);
+        gsap.to(sparkle,{opacity:0, scale:4, duration:1.2, onComplete:()=>sparkle.remove()});
+    }
+});
 
-                mol.mesh.rotation.x += mol.rotationSpeed.x;
-                mol.mesh.rotation.y += mol.rotationSpeed.y;
-                mol.mesh.rotation.z += mol.rotationSpeed.z;
-            });
-
-            renderer.render(scene, camera);
-        }
-        animate();
-
-        // GSAP Animations
-        // Initial hero animations
-        gsap.to('h1', { opacity: 1, scale: 1, duration: 1.5, ease: 'elastic.out(1, 0.5)', delay: 0.3 });
-        gsap.to('.subtitle', { opacity: 1, y: 0, duration: 1, delay: 0.8, stagger: 0.2 });
-        gsap.to('.teacher-name', { opacity: 1, scale: 1, duration: 1.2, delay: 1.2, ease: 'back.out(1.7)' });
-        gsap.to('.from', { opacity: 1, duration: 1, delay: 1.6 });
-        gsap.to('.message', { opacity: 1, scale: 1, duration: 1.5, delay: 2 });
-        gsap.to('.scroll-hint', { opacity: 1, duration: 1, delay: 2.5 });
-
-        // Hide initial content and show reaction on scroll
-        const contentTimeline = gsap.timeline({
-            scrollTrigger: {
-                trigger: 'body',
-                start: 'top top',
-                end: '20% top',
-                scrub: 1
-            }
-        });
-
-        contentTimeline
-            .to('.content > *', { opacity: 0, duration: 0.5 })
-            .to('.scroll-hint', { opacity: 0, duration: 0.3 }, '<');
-
-        // Reaction reveal timeline
-        const reactionTimeline = gsap.timeline({
-            scrollTrigger: {
-                trigger: 'body',
-                start: '15% top',
-                end: '80% top',
-                scrub: 1
-            }
-        });
-
-        reactionTimeline
-            // Show BDC from left
-            .to('#bdc-box', { opacity: 1, x: 0, duration: 1 })
-            
-            // Show + sign
-            .to('#arrow1', { opacity: 1, scale: 1, duration: 0.5, ease: 'back.out(2)' }, '+=0.2')
-            
-            // Show water
-            .to('#water-box', { opacity: 1, x: 0, duration: 1 }, '+=0.2')
-            
-            // Show arrow
-            .to('#arrow2', { opacity: 1, scale: 1, duration: 0.5, ease: 'back.out(2)' }, '+=0.2')
-            
-            // Show phenol from right
-            .to('#phenol-box', { opacity: 1, x: 0, duration: 1 }, '+=0.2');
-
-        // Sparkle effect
-        document.addEventListener('mousemove', (e) => {
-            if (Math.random() > 0.8) {
-                const sparkle = document.createElement('div');
-                sparkle.className = 'sparkle';
-                sparkle.style.left = e.clientX + 'px';
-                sparkle.style.top = e.clientY + 'px';
-                document.body.appendChild(sparkle);
-
-                gsap.to(sparkle, {
-                    opacity: 0,
-                    scale: 4,
-                    duration: 1.2,
-                    onComplete: () => sparkle.remove()
-                });
-            }
-        });
-
-        // Resize handler
-        window.addEventListener('resize', () => {
-            camera.aspect = window.innerWidth / window.innerHeight;
-            camera.updateProjectionMatrix();
-            renderer.setSize(window.innerWidth, window.innerHeight);
-        });
-    </script>
+// Resize
+window.addEventListener('resize',()=>{
+    camera.aspect=window.innerWidth/window.innerHeight;
+    camera.updateProjectionMatrix();
+    renderer.setSize(window.innerWidth, window.innerHeight);
+});
+</script>
 </body>
 </html>
